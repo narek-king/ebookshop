@@ -1,0 +1,8 @@
+<%--<c:choose>--%>
+	<%--<c:when "${page.Link=='category'}">--%>
+		<%--<jsp:include page="includes/main.jsp" />--%>
+	<%--</c:when>--%>
+	<%--<c:otherwise>--%>
+		<%--<jsp:include page="includes/main.jsp" />--%>
+	<%--</c:otherwise>--%>
+<%--</c:choose>--%>
