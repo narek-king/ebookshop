@@ -3,8 +3,10 @@ package com.router;
 /**
  * Created by King on 12/2/2015.
  */
+import com.bean.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -30,24 +32,67 @@ public class login extends HttpServlet {
 //        String  username = respon
         String user = request.getParameter("user");
         String pwd = request.getParameter("pwd");
-//        System.out.println("user: " + user +", Pass: "+ pwd);
 
-        if(userID.equals(user) && password.equals(pwd)){
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            //setting session to expiry in 30 mins
-            session.setMaxInactiveInterval(30*60);
-            Cookie userName = new Cookie("user", user);
-            userName.setMaxAge(30*60);
-            response.addCookie(userName);
-            response.sendRedirect("/welcome?page=main");
-        } else{
+        if(findUser(user)){
+            User newUser = new User(user);
+            if (newUser.getPassword().equals(pwd)){
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                //setting session to expiry in 30 mins
+                session.setMaxInactiveInterval(30*60);
+                Cookie userName = new Cookie("user", user);
+                userName.setMaxAge(30*60);
+                response.addCookie(userName);
+                response.sendRedirect("/welcome?page=main");
+            } else{
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/welcome?page=login&result=fail");
+                PrintWriter out= response.getWriter();
+                out.println("<font color=red>Either user name or password is wrong.</font>  <p><a href = \"welcome?page=register\">Register </a> or <a href=\"welcome?page=login\" id=\"login\">Try Again</a></p>");
+                rd.include(request, response);
+                 }
+            }else{
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/welcome?page=login&result=fail");
             PrintWriter out= response.getWriter();
             out.println("<font color=red>Either user name or password is wrong.</font>  <p><a href = \"welcome?page=register\">Register </a> or <a href=\"welcome?page=login\" id=\"login\">Try Again</a></p>");
             rd.include(request, response);
+                  }
         }
 
+    private boolean findUser(String username){
+        boolean val = false;
+        Connection conn = null;
+        Statement stmt = null;
+        try{
+            //STEP 2: Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ebookshop", "root", "");
+            stmt = conn.createStatement();
+            String sql;
+            sql = "select * from user where username = \"" + username + "\"";
+            ResultSet rs = stmt.executeQuery(sql);
+            val = rs.next();
+            rs.close();
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            se.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(stmt!=null)
+                    stmt.close();
+            }catch(SQLException se2){
+            }
+            try{
+                if(conn!=null)
+                    conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+//        System.out.println(val);
+        return val;
     }
 
 }
