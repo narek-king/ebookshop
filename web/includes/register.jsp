@@ -10,7 +10,13 @@
 <c:import url="includes/sidebar.jsp"></c:import>
 <div id="register">
   <h3>Registration is not avilabale yet</h3>
-  <p>Try a trial account</p>
-  <p>login: serjik</p>
-  <p>password: heracir</p>
+  <form action="/register" method="post">
+
+    Username: <input type="text" name="user">
+    <br>
+    Password: <input type="password" name="pwd">
+    <br>
+    <input type="submit" value="Login">
+
+  </form>
 </div>

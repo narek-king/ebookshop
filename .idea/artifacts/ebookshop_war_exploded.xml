@@ -9,10 +9,10 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="taglibs-standard-compat-1.2.5" />
-          <element id="library" level="project" name="taglibs-standard-jstlel-1.2.5" />
           <element id="library" level="project" name="standard" />
           <element id="library" level="project" name="jstl" />
           <element id="library" level="project" name="mysql-connector-java-5.1.37-bin" />
+          <element id="file-copy" path="$APPLICATION_HOME_DIR$/lib/groovy-all-2.3.9.jar" />
         </element>
       </element>
     </root>

@@ -23,8 +23,7 @@ import javax.servlet.http.HttpSession;
 //@WebServlet("/LoginServlet")
 public class login extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private final String userID = "serjik";
-    private final String password = "heracir";
+
 
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 
@@ -58,8 +57,9 @@ public class login extends HttpServlet {
                   }
         }
 
-    private boolean findUser(String username){
+    private boolean findUser(String usern){
         boolean val = false;
+        int count;
         Connection conn = null;
         Statement stmt = null;
         try{
@@ -68,9 +68,17 @@ public class login extends HttpServlet {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ebookshop", "root", "");
             stmt = conn.createStatement();
             String sql;
-            sql = "select * from user where username = \"" + username + "\"";
+            sql = "SELECT COUNT(*) AS rowcount FROM user WHERE username = \"" + usern + "\" GROUP BY username";
             ResultSet rs = stmt.executeQuery(sql);
-            val = rs.next();
+//            while (rs.next()){
+            rs.next();
+                count = rs.getInt("rowcount");
+//                System.out.println(count);
+                if (count>0)
+                    val = true;
+//            }
+
+
             rs.close();
             stmt.close();
             conn.close();
